@@ -5,15 +5,15 @@ using UnityEngine;
 [System.Serializable] //인스펙터창에 표시됨
 public class NoiseLayer
 {
-    Noise noise = new Noise();
-    public bool enabled;    
-    public int octaveCount;
-    public float roughness;
-    public float strength;
-    public float lacunarity;
-    public float persistence;
-    public float seaLevel;
-    public Vector3 offset;
+    Noise noise = new Noise(); //객체 인스턴스생성
+    public bool enabled; //노이즈레이어 활성화/비활성화   
+    public int octaveCount; //옥타브 개수
+    public float roughness; //높을수록 굴곡 개수 많음
+    public float strength; //노이즈의 세기
+    public float lacunarity; //다음 옥타브로 갈때마다 roughness에 곱해짐
+    public float persistence; //다음 옥타브로 갈때마다 strength에 곱해짐
+    public float seaLevel; //해수면
+    public Vector3 offset; //노이즈 중심점 이동
     
     public float Evaluate(Vector3 point)
     {
@@ -49,21 +49,21 @@ public class PlanetGenerator : MonoBehaviour
 
     MeshFilter GenerateOneFace(Vector3 direction /*면이 바라보는 방향*/,int idx /*몇번째 생성하는 면인지 정의*/)
     {
-        Vector3 axisA = new Vector3(direction.y, direction.z, direction.x);
-        Vector3 axisB = Vector3.Cross(direction, axisA);
+        Vector3 axisA = new Vector3(direction.y, direction.z, direction.x); //면이 바라보는 방향과 수직
+        Vector3 axisB = Vector3.Cross(direction, axisA); //direction, axisA 와 모두 수직
 
         GameObject g;
         MeshFilter mf;
         MeshRenderer mr;
 
-        if(transform.childCount < idx + 1)
+        if(transform.childCount < idx + 1) //g가 생성되지 않았다면
         {
             g = new GameObject("g");
             g.transform.parent = this.transform;
             mf = g.AddComponent<MeshFilter>();
             mr = g.AddComponent<MeshRenderer>();
         }
-        else
+        else //g가 이미 생성되었다면
         {
             g = transform.GetChild(idx).gameObject;
             mf = g.GetComponent<MeshFilter>();
@@ -109,7 +109,7 @@ public class PlanetGenerator : MonoBehaviour
         Mesh mesh = mf.sharedMesh = new Mesh();
         mesh.vertices = vertices;
         mesh.triangles = triangles;
-        mr.material = new Material(Shader.Find("Standard"));
+        mr.material = new Material(Shader.Find("Standard")); //Standard쉐이더로 새 머티리얼 생성
         mesh.RecalculateNormals(); //빛 초기화
         mesh.RecalculateBounds(); //메쉬 부드럽게
         return mf;
